@@ -11,8 +11,8 @@ The dataset (`burrito_shack_digital_performance_cleaned.csv`) was prepared from 
 - Standardized inconsistent date formats (`YYYY-MM-DD`, `MM/DD/YYYY`, `YYYY/MM/DD`) using explicit parsing rules
 - Converted numerical fields from strings → numeric types
 - Investigated nulls in spend & bounce rate:
-  - Missing spend values interpreted as reporting gaps → imputed as `0`
-  - Missing bounce rate values preserved but made visible in visualizations
+  - Missing spend values interpreted as reporting gaps → imputed as `0` and flagged in the dataset for further remediation/investigation
+  - Missing bounce rate  and average order values imputed as the median to avoid broken/misleading metrics
 - Removed duplicate rows & ensured valid ranges (no negative spend/revenue)
 
 🎯 Goal: clean, analytics-ready inputs with traceability for data quality issues.
@@ -100,30 +100,3 @@ Then visit the local server printed in your terminal.
 ✅ Full drill-down filtering
 
 
-
-```
-burritoShackAnalytics
-├─ burrito-shack-analytics
-│  ├─ eslint.config.js
-│  ├─ index.html
-│  ├─ package-lock.json
-│  ├─ package.json
-│  ├─ public
-│  │  ├─ burrito.svg
-│  │  ├─ burrito_shack_digital_performance_cleaned.csv
-│  │  └─ vite.svg
-│  ├─ README.md
-│  ├─ src
-│  │  ├─ App.css
-│  │  ├─ App.jsx
-│  │  ├─ assets
-│  │  │  └─ react.svg
-│  │  ├─ index.css
-│  │  └─ main.jsx
-│  └─ vite.config.js
-├─ burrito_shack_digital_performance.csv
-├─ burrito_shack_digital_performance_cleaned.csv
-├─ clean_burrito.ipynb
-└─ README.md
-
-```
