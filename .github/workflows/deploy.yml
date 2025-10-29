@@ -1,4 +1,5 @@
-name: Deploy Vite site to GitHub Pages
+# .github/workflows/deploy.yml
+name: Deploy Vite site to GitHub Pages (subdir)
 
 on:
   push:
@@ -14,6 +15,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+env:
+  APP_DIR: burritoShackAnalytics/burrito-shack-analytics
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,24 +29,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          # NOTE: removed cache to avoid lockfile-at-root error
+          # If you want caching, add:
+          # cache: npm
+          # cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
 
       - name: Install
+        working-directory: ${{ env.APP_DIR }}
         run: npm ci
 
+      - name: Ensure CSV filename (optional)
+        working-directory: ${{ env.APP_DIR }}/public
+        run: |
+          if [ -f "burrito_shack_digital_performance_cleaned.csv" ]; then
+            cp burrito_shack_digital_performance_cleaned.csv cleaned.csv
+          fi
+
       - name: Build
+        working-directory: ${{ env.APP_DIR }}
         env:
-          # Vite base path so import.meta.env.BASE_URL works on GH Pages
           BASE_PATH: "/${{ github.event.repository.name }}/"
         run: npm run build
 
       - name: SPA fallback (copy index.html -> 404.html)
+        working-directory: ${{ env.APP_DIR }}
         run: cp dist/index.html dist/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: ${{ env.APP_DIR }}/dist
 
   deploy:
     needs: build
