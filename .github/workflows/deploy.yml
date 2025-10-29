@@ -1,5 +1,5 @@
 # .github/workflows/deploy.yml
-name: Deploy Vite site to GitHub Pages (subdir)
+name: Deploy Vite site to GitHub Pages (auto-detect subdir)
 
 on:
   push:
@@ -15,9 +15,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
-env:
-  APP_DIR: burritoShackAnalytics/burrito-shack-analytics
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,12 +22,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Detect app directory
+        id: detect
+        run: |
+          set -e
+          # Option A: nested
+          if [ -f "burritoShackAnalytics/burrito-shack-analytics/package.json" ]; then
+            echo "APP_DIR=burritoShackAnalytics/burrito-shack-analytics" >> "$GITHUB_ENV"
+            echo "dir=burritoShackAnalytics/burrito-shack-analytics" >> "$GITHUB_OUTPUT"
+          # Option B: repo root subdir
+          elif [ -f "burrito-shack-analytics/package.json" ]; then
+            echo "APP_DIR=burrito-shack-analytics" >> "$GITHUB_ENV"
+            echo "dir=burrito-shack-analytics" >> "$GITHUB_OUTPUT"
+          else
+            echo "Could not find Vite app directory. Checked:"
+            echo " - burritoShackAnalytics/burrito-shack-analytics"
+            echo " - burrito-shack-analytics"
+            echo "Repo tree:"
+            ls -la
+            exit 1
+          fi
+          echo "Using APP_DIR=${{ steps.detect.outputs.dir }}"
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          # NOTE: removed cache to avoid lockfile-at-root error
-          # If you want caching, add:
+          # If you want caching later, uncomment the next two lines:
           # cache: npm
           # cache-dependency-path: ${{ env.APP_DIR }}/package-lock.json
 
@@ -41,6 +59,7 @@ jobs:
       - name: Ensure CSV filename (optional)
         working-directory: ${{ env.APP_DIR }}/public
         run: |
+          # If your app expects cleaned.csv, copy the long filename to that.
           if [ -f "burrito_shack_digital_performance_cleaned.csv" ]; then
             cp burrito_shack_digital_performance_cleaned.csv cleaned.csv
           fi
@@ -48,10 +67,11 @@ jobs:
       - name: Build
         working-directory: ${{ env.APP_DIR }}
         env:
+          # Make Vite assets resolve at https://<user>.github.io/<repo>/
           BASE_PATH: "/${{ github.event.repository.name }}/"
         run: npm run build
 
-      - name: SPA fallback (copy index.html -> 404.html)
+      - name: SPA fallback (index.html -> 404.html)
         working-directory: ${{ env.APP_DIR }}
         run: cp dist/index.html dist/404.html
 
