@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import * as d3 from "d3";
 
 /**
- * Burrito Shack – Executive Dashboard (React + D3 + Vite)
+ * Burrito Shack – Executive Marketing Dashboard (React + D3 + Vite)
  * - Single data source: /public/cleaned.csv
  * - Global filters: Market, Channel, Date range (apply to ALL tabs)
  * - Tabs: Overview / Markets / Channels / Details / Insights
@@ -67,10 +67,14 @@ export default function App() {
   // ---------------- Render ----------------
   return (
     <div
+      className="appRoot"
       style={{
-        minHeight: "100vh",
+        // full-page app shell
+        minHeight: "100%",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
+        // page-wide background lives on the shell
         background: `linear-gradient(180deg, ${theme.crema}, ${theme.tortilla})`,
         color: theme.charcoal,
       }}
@@ -98,9 +102,24 @@ export default function App() {
         </div>
 
         {/* ----- OVERVIEW ----- */}
-        <div style={{ maxWidth: 1600, margin: "0 auto", display: tab === "overview" ? "block" : "none" }}>
+        <div
+          style={{
+            maxWidth: 1600,
+            margin: "0 auto",
+            display: tab === "overview" ? "block" : "none",
+            minHeight: "60vh", // optional: keeps page feeling full
+          }}
+        >
           <KPIRow m={metrics} />
-          <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: 16, minHeight: 360, marginTop: 16 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.5fr 1fr",
+              gap: 16,
+              minHeight: 360,
+              marginTop: 16,
+            }}
+          >
             <Panel title="Revenue & ROAS Over Time" theme={theme}>
               <RevenueRoasChart data={metrics.byDate} setTooltip={setTooltip} />
             </Panel>
@@ -115,21 +134,42 @@ export default function App() {
         </div>
 
         {/* ----- MARKETS ----- */}
-        <div style={{ maxWidth: 1600, margin: "0 auto", display: tab === "markets" ? "block" : "none" }}>
+        <div
+          style={{
+            maxWidth: 1600,
+            margin: "0 auto",
+            display: tab === "markets" ? "block" : "none",
+            minHeight: "60vh",
+          }}
+        >
           <Panel title="Markets" theme={theme}>
             <MarketsTable data={metrics.byMarket} />
           </Panel>
         </div>
 
         {/* ----- CHANNELS ----- */}
-        <div style={{ maxWidth: 1600, margin: "0 auto", display: tab === "channels" ? "block" : "none" }}>
+        <div
+          style={{
+            maxWidth: 1600,
+            margin: "0 auto",
+            display: tab === "channels" ? "block" : "none",
+            minHeight: "60vh",
+          }}
+        >
           <Panel title="Channels" theme={theme}>
             <ROASByChannel data={metrics.channelArr} setTooltip={setTooltip} highlight={channelFocus} />
           </Panel>
         </div>
 
         {/* ----- DETAILS ----- */}
-        <div style={{ maxWidth: 1600, margin: "0 auto", display: tab === "details" ? "block" : "none" }}>
+        <div
+          style={{
+            maxWidth: 1600,
+            margin: "0 auto",
+            display: tab === "details" ? "block" : "none",
+            minHeight: "60vh",
+          }}
+        >
           <Panel title="Details – KPIs" theme={theme}>
             <KPIRow m={metrics} />
           </Panel>
@@ -139,7 +179,14 @@ export default function App() {
         </div>
 
         {/* ----- INSIGHTS ----- */}
-        <div style={{ maxWidth: 1600, margin: "0 auto", display: tab === "insights" ? "block" : "none" }}>
+        <div
+          style={{
+            maxWidth: 1600,
+            margin: "0 auto",
+            display: tab === "insights" ? "block" : "none",
+            minHeight: "60vh",
+          }}
+        >
           <InsightsPanel rows={rowsFiltered} channelFocus={channelFocus} />
         </div>
 
@@ -164,7 +211,7 @@ export default function App() {
       </main>
 
       <footer style={{ textAlign: "center", color: "#6a6a6a", padding: 16 }}>
-        Data source: <code>public/cleaned.csv</code>
+        Data source: <code>burrito_shack_digital_performance_cleaned.csv</code>
       </footer>
     </div>
   );
@@ -181,35 +228,41 @@ function Topbar({ theme }) {
         zIndex: 10,
         background: `linear-gradient(90deg, ${theme.salsa}, ${theme.avocado})`,
         color: "white",
-        padding: "14px 20px",
-        display: "flex",
-        alignItems: "center",
-        gap: 14,
         boxShadow: "0 10px 30px rgba(0,0,0,.08)",
       }}
     >
+      {/* Centered inner container */}
       <div
         style={{
-          width: 40,
-          height: 40,
-          borderRadius: 12,
-          background: theme.crema,
-          color: theme.beans,
-          display: "grid",
-          placeItems: "center",
-          fontSize: 22,
-          fontWeight: 800,
-          transform: "rotate(-8deg)",
+          maxWidth: 1600,
+          margin: "0 auto",
+          padding: "14px 20px",
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
         }}
       >
-        🌯
-      </div>
-      <div>
-        <div style={{ fontWeight: 800, letterSpacing: 0.3 }}>
-          J Jeong's Burrito Shack 
+        <div
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 12,
+            background: theme.crema,
+            color: theme.beans,
+            display: "grid",
+            placeItems: "center",
+            fontSize: 22,
+            fontWeight: 800,
+            transform: "rotate(-8deg)",
+          }}
+        >
+          🌯
         </div>
-        <div style={{ opacity: 0.85, fontWeight: 500 }}>
-          Marketing Performance Dashboard
+        <div>
+          <div style={{ fontWeight: 800, letterSpacing: 0.3 }}>
+            Burrito Shack – Growth Kitchen
+          </div>
+          <div style={{ opacity: 0.85, fontWeight: 500 }}>Executive Marketing Performance</div>
         </div>
       </div>
     </div>
@@ -347,69 +400,6 @@ function DateInput({ value, onChange, minDate }) {
 }
 
 /* ---------------- Viz Components ---------------- */
-
-function InsightsPanel({ rows, channelFocus }){
-  const i = React.useMemo(() => buildInsights(rows, channelFocus), [rows, channelFocus]);
-  if (!i) return <EmptyChart note="Not enough data for insights"/>;
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
-      <Panel title={`MoM (${i.labels.currLabel} vs ${i.labels.prevLabel})`}>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:12 }}>
-          <DeltaCard label="Revenue" curr={i.curr.revenue} prev={i.prev.revenue} fmt={v=>"$"+d3.format(",.0f")(v)} />
-          <DeltaCard label="Orders" curr={i.curr.orders} prev={i.prev.orders} fmt={v=>d3.format(",")(v)} />
-          <DeltaCard label="ROAS" curr={i.curr.roas} prev={i.prev.roas} fmt={v=>d3.format(".2f")(v)} />
-          <DeltaCard label="CVR" curr={i.curr.cvr} prev={i.prev.cvr} fmt={v=>d3.format(".1%")(v)} />
-        </div>
-      </Panel>
-      <Panel title={`YoY (${i.labels.currLabel} vs ${i.labels.yoyLabel})`}>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:12 }}>
-          <DeltaCard label="Revenue" curr={i.curr.revenue} prev={i.yoy.revenue} fmt={v=>"$"+d3.format(",.0f")(v)} />
-          <DeltaCard label="Orders" curr={i.curr.orders} prev={i.yoy.orders} fmt={v=>d3.format(",")(v)} />
-          <DeltaCard label="ROAS" curr={i.curr.roas} prev={i.yoy.roas} fmt={v=>d3.format(".2f")(v)} />
-          <DeltaCard label="CVR" curr={i.curr.cvr} prev={i.yoy.cvr} fmt={v=>d3.format(".1%")(v)} />
-        </div>
-      </Panel>
-      <Panel title="Auto Insights (last month)">
-        <ul style={{ marginTop: 0 }}>
-          <li>{i.narratives.topChannel}</li>
-          <li>{i.narratives.bestMarket}</li>
-          <li>{i.narratives.watchMetric}</li>
-        </ul>
-      </Panel>
-    </div>
-  );
-}
-
-function DeltaCard({ label, curr, prev, fmt }){
-  const pct = prev ? (curr - prev) / prev : (curr ? 1 : 0);
-  const up = pct >= 0;
-  return (
-    <div style={{ background:'white', borderRadius:16, padding:14, boxShadow:'0 10px 30px rgba(0,0,0,.08)'}}>
-      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline' }}>
-        <h4 style={{ margin:0, opacity:.7, textTransform:'uppercase', fontSize:12 }}>{label}</h4>
-        <span style={{ fontWeight:700, color: up? '#1b5e20' : '#c62828' }}>{(up? '▲' : '▼')} {d3.format('.1%')(Math.abs(pct))}</span>
-      </div>
-      <div style={{ fontSize:22, fontWeight:800 }}>{fmt(curr||0)}</div>
-      <svg width={220} height={36} style={{ width:'100%', maxWidth:220 }}>
-        {(() => {
-          const w=200, h=16; const gmax=Math.max(curr||0, prev||0, 1);
-          const x = d3.scaleLinear().domain([0, gmax]).range([0,w]);
-          return (
-            <g transform={`translate(${(220-w)/2},10)`}>
-              <rect x={0} y={0} width={x(prev||0)} height={h} fill="#d9e9e6"/>
-              <rect x={0} y={0} width={x(curr||0)} height={h} fill="#2a9d8f" opacity={0.9}/>
-            </g>
-          );
-        })()}
-      </svg>
-      <div style={{ display:'flex', gap:12, fontSize:12, color:'#666' }}>
-        <span>Prev: <b>{fmt(prev||0)}</b></span>
-        <span>Curr: <b>{fmt(curr||0)}</b></span>
-      </div>
-    </div>
-  );
-}
-
 
 function KPIRow({ m }) {
   const fMoney0 = (n) => "$" + d3.format(",.0f")(n);
@@ -596,9 +586,9 @@ function ROASByChannel({ data, setTooltip, highlight = null }) {
                   show: true,
                   x: e.clientX,
                   y: e.clientY,
-                  html: `<b>${d.channel}</b><br/>ROAS: ${d3.format(".2f")(d.roas)}<br/>CPC: $${d3.format(",.2f")(d.cpc)}<br/>CTR: ${d3.format(".1%")(
-                    d.ctr
-                  )}`,
+                  html: `<b>${d.channel}</b><br/>ROAS: ${d3.format(".2f")(d.roas)}<br/>CPC: $${d3.format(",.2f")(
+                    d.cpc
+                  )}<br/>CTR: ${d3.format(".1%")(d.ctr)}`,
                 })
               }
               onMouseMove={(e) => setTooltip((t) => ({ ...t, x: e.clientX, y: e.clientY }))}
@@ -703,87 +693,199 @@ function EmptyChart({ note }) {
   );
 }
 
+function InsightsPanel({ rows, channelFocus }) {
+  const i = React.useMemo(() => buildInsights(rows, channelFocus), [rows, channelFocus]);
+  if (!i) return <EmptyChart note="Not enough data for insights" />;
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+      <Panel title={`MoM (${i.labels.currLabel} vs ${i.labels.prevLabel})`}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+          <DeltaCard label="Revenue" curr={i.curr.revenue} prev={i.prev.revenue} fmt={(v) => "$" + d3.format(",.0f")(v)} />
+          <DeltaCard label="Orders" curr={i.curr.orders} prev={i.prev.orders} fmt={(v) => d3.format(",")(v)} />
+          <DeltaCard label="ROAS" curr={i.curr.roas} prev={i.prev.roas} fmt={(v) => d3.format(".2f")(v)} />
+          <DeltaCard label="CVR" curr={i.curr.cvr} prev={i.prev.cvr} fmt={(v) => d3.format(".1%")(v)} />
+        </div>
+      </Panel>
+      <Panel title={`YoY (${i.labels.currLabel} vs ${i.labels.yoyLabel})`}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+          <DeltaCard label="Revenue" curr={i.curr.revenue} prev={i.yoy.revenue} fmt={(v) => "$" + d3.format(",.0f")(v)} />
+          <DeltaCard label="Orders" curr={i.curr.orders} prev={i.yoy.orders} fmt={(v) => d3.format(",")(v)} />
+          <DeltaCard label="ROAS" curr={i.curr.roas} prev={i.yoy.roas} fmt={(v) => d3.format(".2f")(v)} />
+          <DeltaCard label="CVR" curr={i.curr.cvr} prev={i.yoy.cvr} fmt={(v) => d3.format(".1%")(v)} />
+        </div>
+      </Panel>
+      <Panel title="Auto Insights (last month)">
+        <ul style={{ marginTop: 0 }}>
+          <li>{i.narratives.topChannel}</li>
+          <li>{i.narratives.bestMarket}</li>
+          <li>{i.narratives.watchMetric}</li>
+        </ul>
+      </Panel>
+    </div>
+  );
+}
+
+function DeltaCard({ label, curr, prev, fmt }) {
+  const pct = prev ? (curr - prev) / prev : (curr ? 1 : 0);
+  const up = pct >= 0;
+  return (
+    <div style={{ background: "white", borderRadius: 16, padding: 14, boxShadow: "0 10px 30px rgba(0,0,0,.08)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+        <h4 style={{ margin: 0, opacity: 0.7, textTransform: "uppercase", fontSize: 12 }}>{label}</h4>
+        <span style={{ fontWeight: 700, color: up ? "#1b5e20" : "#c62828" }}>
+          {up ? "▲" : "▼"} {d3.format(".1%")(Math.abs(pct))}
+        </span>
+      </div>
+      <div style={{ fontSize: 22, fontWeight: 800 }}>{fmt(curr || 0)}</div>
+      <svg width={220} height={36} style={{ width: "100%", maxWidth: 220 }}>
+        {(() => {
+          const w = 200,
+            h = 16;
+          const gmax = Math.max(curr || 0, prev || 0, 1);
+          const x = d3.scaleLinear().domain([0, gmax]).range([0, w]);
+          return (
+            <g transform={`translate(${(220 - w) / 2},10)`}>
+              <rect x={0} y={0} width={x(prev || 0)} height={h} fill="#d9e9e6" />
+              <rect x={0} y={0} width={x(curr || 0)} height={h} fill="#2a9d8f" opacity={0.9} />
+            </g>
+          );
+        })()}
+      </svg>
+      <div style={{ display: "flex", gap: 12, fontSize: 12, color: "#666" }}>
+        <span>
+          Prev: <b>{fmt(prev || 0)}</b>
+        </span>
+        <span>
+          Curr: <b>{fmt(curr || 0)}</b>
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /* ---------------- Data shaping ---------------- */
 
-function monthKey(d){ const dt = new Date(d.getFullYear(), d.getMonth(), 1); return +dt; }
-function addMonths(d, n){ const dt = new Date(d); dt.setMonth(dt.getMonth()+n); return new Date(dt.getFullYear(), dt.getMonth(), 1); }
+function monthKey(d) {
+  const dt = new Date(d.getFullYear(), d.getMonth(), 1);
+  return +dt;
+}
+function addMonths(d, n) {
+  const dt = new Date(d);
+  dt.setMonth(dt.getMonth() + n);
+  return new Date(dt.getFullYear(), dt.getMonth(), 1);
+}
 
-function buildInsights(rows, channelFocus){
+function buildInsights(rows, channelFocus) {
   if (!rows?.length) return null;
-  const monthly = d3.rollups(
-    rows,
-    (v)=>{
-      const revenue = d3.sum(v, d=>d.revenue);
-      const orders = d3.sum(v, d=>d.online_orders);
-      const sessions = d3.sum(v, d=>d.sessions);
-      const spendS = d3.sum(v, d=>d.ad_spend_social);
-      const spendSe= d3.sum(v, d=>d.ad_spend_search);
-      const spendD = d3.sum(v, d=>d.ad_spend_display);
-      const spend = channelFocus==='social'?spendS:channelFocus==='search'?spendSe:channelFocus==='display'?spendD:(spendS+spendSe+spendD);
-      const cvr = sessions? orders/sessions : 0;
-      const roas = spend? revenue/spend : 0;
-      return { revenue, orders, sessions, spend, cvr, roas };
-    },
-    d=> monthKey(d.date)
-  ).map(([k,v])=>({ month:new Date(+k), ...v }))
-   .sort((a,b)=>a.month-b.month);
-  if (monthly.length<2) return null;
-  const curr = monthly[monthly.length-1];
-  const prev = monthly[monthly.length-2];
+  const monthly = d3
+    .rollups(
+      rows,
+      (v) => {
+        const revenue = d3.sum(v, (d) => d.revenue);
+        const orders = d3.sum(v, (d) => d.online_orders);
+        const sessions = d3.sum(v, (d) => d.sessions);
+        const spendS = d3.sum(v, (d) => d.ad_spend_social);
+        const spendSe = d3.sum(v, (d) => d.ad_spend_search);
+        const spendD = d3.sum(v, (d) => d.ad_spend_display);
+        const spend =
+          channelFocus === "social"
+            ? spendS
+            : channelFocus === "search"
+            ? spendSe
+            : channelFocus === "display"
+            ? spendD
+            : spendS + spendSe + spendD;
+        const cvr = sessions ? orders / sessions : 0;
+        const roas = spend ? revenue / spend : 0;
+        return { revenue, orders, sessions, spend, cvr, roas };
+      },
+      (d) => monthKey(d.date)
+    )
+    .map(([k, v]) => ({ month: new Date(+k), ...v }))
+    .sort((a, b) => a.month - b.month);
+  if (monthly.length < 2) return null;
+  const curr = monthly[monthly.length - 1];
+  const prev = monthly[monthly.length - 2];
   const yoyMonthKey = +addMonths(curr.month, -12);
-  const yoy = monthly.find(m=> +m.month===yoyMonthKey) || { revenue:0, orders:0, sessions:0, spend:0, cvr:0, roas:0 };
+  const yoy =
+    monthly.find((m) => +m.month === yoyMonthKey) || {
+      revenue: 0,
+      orders: 0,
+      sessions: 0,
+      spend: 0,
+      cvr: 0,
+      roas: 0,
+    };
 
-  const channels = ['social','search','display'];
-  const channelStats = channels.map(ch=>{
-    const series = d3.rollups(rows, v=>{
-      const rev = d3.sum(v,d=>d.revenue);
-      const sS = d3.sum(v,d=>d.ad_spend_social), sSe=d3.sum(v,d=>d.ad_spend_search), sD=d3.sum(v,d=>d.ad_spend_display);
-      const spend = ch==='social'?sS:ch==='search'?sSe:sD;
-      const orders = d3.sum(v,d=>d.online_orders), sessions = d3.sum(v,d=>d.sessions);
-      const cvr = sessions? orders/sessions:0; const roas = spend? rev/spend:0;
-      return { revenue: rev, roas, cvr };
-    }, d=> monthKey(d.date)).map(([k,v])=>({month:new Date(+k), ...v})).sort((a,b)=>a.month-b.month);
-    const c = series[series.length-1]||{}; const p=series[series.length-2]||{};
-    const dRoas = p.roas? (c.roas-p.roas)/p.roas : (c.roas?1:0);
-    const dRev  = p.revenue? (c.revenue-p.revenue)/p.revenue : (c.revenue?1:0);
-    const dCvr  = p.cvr? (c.cvr-p.cvr)/p.cvr : (c.cvr?1:0);
+  const channels = ["social", "search", "display"];
+  const channelStats = channels.map((ch) => {
+    const series = d3
+      .rollups(
+        rows,
+        (v) => {
+          const rev = d3.sum(v, (d) => d.revenue);
+          const sS = d3.sum(v, (d) => d.ad_spend_social),
+            sSe = d3.sum(v, (d) => d.ad_spend_search),
+            sD = d3.sum(v, (d) => d.ad_spend_display);
+          const spend = ch === "social" ? sS : ch === "search" ? sSe : sD;
+          const orders = d3.sum(v, (d) => d.online_orders),
+            sessions = d3.sum(v, (d) => d.sessions);
+          const cvr = sessions ? orders / sessions : 0;
+          const roas = spend ? rev / spend : 0;
+          return { revenue: rev, roas, cvr };
+        },
+        (d) => monthKey(d.date)
+      )
+      .map(([k, v]) => ({ month: new Date(+k), ...v }))
+      .sort((a, b) => a.month - b.month);
+    const c = series[series.length - 1] || {};
+    const p = series[series.length - 2] || {};
+    const dRoas = p.roas ? (c.roas - p.roas) / p.roas : c.roas ? 1 : 0;
+    const dRev = p.revenue ? (c.revenue - p.revenue) / p.revenue : c.revenue ? 1 : 0;
+    const dCvr = p.cvr ? (c.cvr - p.cvr) / p.cvr : c.cvr ? 1 : 0;
     return { ch, dRoas, dRev, dCvr };
   });
-  const topRoas = channelStats.reduce((a,b)=> (Math.abs(b.dRoas)>Math.abs(a.dRoas)? b:a), channelStats[0]);
+  const topRoas = channelStats.reduce((a, b) => (Math.abs(b.dRoas) > Math.abs(a.dRoas) ? b : a), channelStats[0]);
 
-  const marketMonthly = d3.rollups(rows, v=>({ revenue: d3.sum(v,d=>d.revenue) }), d=> `${d.city}, ${d.state}`, d=> monthKey(d.date));
-  let bestMarketMsg = 'Not enough market data';
-  if (marketMonthly.length){
-    const growth = marketMonthly.map(([market, arr])=>{
-      const series = arr.map(([k,v])=>({month:new Date(+k), ...v})).sort((a,b)=>a.month-b.month);
-      const c = series[series.length-1]||{revenue:0};
-      const p = series[series.length-2]||{revenue:0};
-      const g = p.revenue? (c.revenue-p.revenue)/p.revenue : (c.revenue?1:0);
+  const marketMonthly = d3.rollups(
+    rows,
+    (v) => ({ revenue: d3.sum(v, (d) => d.revenue) }),
+    (d) => `${d.city}, ${d.state}`,
+    (d) => monthKey(d.date)
+  );
+  let bestMarketMsg = "Not enough market data";
+  if (marketMonthly.length) {
+    const growth = marketMonthly.map(([market, arr]) => {
+      const series = arr.map(([k, v]) => ({ month: new Date(+k), ...v })).sort((a, b) => a.month - b.month);
+      const c = series[series.length - 1] || { revenue: 0 };
+      const p = series[series.length - 2] || { revenue: 0 };
+      const g = p.revenue ? (c.revenue - p.revenue) / p.revenue : c.revenue ? 1 : 0;
       return { market, g };
     });
-    const best = growth.reduce((a,b)=> (b.g>a.g? b:a), growth[0]);
-    bestMarketMsg = `${best.market} had the strongest MoM revenue growth (${d3.format('.1%')(best.g)}).`;
+    const best = growth.reduce((a, b) => (b.g > a.g ? b : a), growth[0]);
+    bestMarketMsg = `${best.market} had the strongest MoM revenue growth (${d3.format(".1%")(best.g)}).`;
   }
 
   const labels = {
-    currLabel: d3.timeFormat('%b %Y')(curr.month),
-    prevLabel: d3.timeFormat('%b %Y')(prev.month),
-    yoyLabel: d3.timeFormat('%b %Y')(addMonths(curr.month,-12)),
+    currLabel: d3.timeFormat("%b %Y")(curr.month),
+    prevLabel: d3.timeFormat("%b %Y")(prev.month),
+    yoyLabel: d3.timeFormat("%b %Y")(addMonths(curr.month, -12)),
   };
 
   return {
     labels,
     curr: { revenue: curr.revenue, orders: curr.orders, roas: curr.roas, cvr: curr.cvr },
     prev: { revenue: prev.revenue, orders: prev.orders, roas: prev.roas, cvr: prev.cvr },
-    yoy:  { revenue: yoy.revenue,  orders: yoy.orders,  roas: yoy.roas,  cvr: yoy.cvr },
+    yoy: { revenue: yoy.revenue, orders: yoy.orders, roas: yoy.roas, cvr: yoy.cvr },
     narratives: {
-      topChannel: `${topRoas.ch} channel had the largest MoM ROAS change (${d3.format('.1%')(topRoas.dRoas)}).`,
+      topChannel: `${topRoas.ch} channel had the largest MoM ROAS change (${d3.format(".1%")(topRoas.dRoas)}).`,
       bestMarket: bestMarketMsg,
-      watchMetric: `Watch CVR: ${labels.currLabel} vs ${labels.prevLabel} is ${d3.format('.1%')((curr.cvr - prev.cvr)/(prev.cvr||1))} change.`
-    }
+      watchMetric: `Watch CVR: ${labels.currLabel} vs ${labels.prevLabel} is ${d3.format(".1%")(
+        (curr.cvr - prev.cvr) / (prev.cvr || 1)
+      )} change.`,
+    },
   };
 }
-
 
 function parseRow(d) {
   return {
@@ -832,9 +934,7 @@ function derive(rows, channelFocus = null) {
   const totalSessions = sum(rows, "sessions");
   const aov = totalOrders ? totalRevenue / totalOrders : 0;
   const spend_total =
-    sum(rows, "ad_spend_social") +
-    sum(rows, "ad_spend_search") +
-    sum(rows, "ad_spend_display");
+    sum(rows, "ad_spend_social") + sum(rows, "ad_spend_search") + sum(rows, "ad_spend_display");
   const cvr = totalSessions ? totalOrders / totalSessions : 0;
   const roas_overall = spend_total ? totalRevenue / spend_total : 0;
 
