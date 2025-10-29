@@ -71,7 +71,7 @@ export default function App() {
       style={{
         // full-page app shell
         minHeight: "100%",
-        width: "100%",
+        width: "100vw",
         display: "flex",
         flexDirection: "column",
         // page-wide background lives on the shell
@@ -260,9 +260,9 @@ function Topbar({ theme }) {
         </div>
         <div>
           <div style={{ fontWeight: 800, letterSpacing: 0.3 }}>
-            Burrito Shack – Growth Kitchen
+            J Jeong's Burrito Shack
           </div>
-          <div style={{ opacity: 0.85, fontWeight: 500 }}>Executive Marketing Performance</div>
+          <div style={{ opacity: 0.85, fontWeight: 500 }}>Marketing Performance Dashboard</div>
         </div>
       </div>
     </div>
